@@ -36,20 +36,22 @@ return {
         end
       end, 0)
 
-      -- 2) 高亮：FileType 时启动 treesitter（nvim 原生，parser 缺失时 pcall 兜底）
+      -- 2) 高亮 + 折叠 + 缩进：FileType 时启动 treesitter（parser 缺失时 pcall 兜底）
+      --    折叠/缩进必须在 treesitter 成功启动的缓冲上设置，否则原 vim.wo/vim.bo
+      --    写法只作用于首个窗口，且会在没装 parser 的文件上误触发。
       vim.api.nvim_create_autocmd('FileType', {
         group = vim.api.nvim_create_augroup('TreesitterStart', {}),
         callback = function(args)
-          pcall(vim.treesitter.start, args.buf)
+          local ok = pcall(vim.treesitter.start, args.buf)
+          if not ok then
+            return
+          end
+          -- 仅在 treesitter 成功启动的缓冲上启用基于语法的折叠/缩进
+          vim.bo[args.buf].foldmethod = 'expr'
+          vim.wo[0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+          vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
         end,
       })
-
-      -- 3) 折叠基于 treesitter
-      vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-      vim.wo.foldmethod = 'expr'
-
-      -- 4) 缩进（实验性）
-      vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
     end,
   },
 }

@@ -11,9 +11,13 @@ au('TextYankPost', {
 })
 
 -- 保存时自动去除行尾空白（对齐 vimrc \rb 习惯）
+-- 例外：markdown 行尾两个空格是「强制换行」语义，删了会破坏排版 → 跳过
 au('BufWritePre', {
   pattern = '*',
-  callback = function()
+  callback = function(ev)
+    if vim.bo[ev.buf].filetype == 'markdown' then
+      return
+    end
     local saved = vim.fn.winsaveview()
     vim.cmd([[%s/\s\+$//e]])
     vim.fn.winrestview(saved)

@@ -36,3 +36,11 @@ o.undofile = true
 
 o.wrap = false
 o.breakindent = true
+
+-- 折叠：默认全展开（不折叠），但保留 zM/zR 等折叠能力
+-- foldlevelstart=99 → 打开文件时折叠全打开；想折叠再手动 zM 全折/zA 切换
+-- foldexpr/foldmethod 在 treesitter.lua 里按 filetype 覆盖为 treesitter
+o.foldenable = true
+o.foldlevel = 99
+o.foldlevelstart = 99
+o.foldcolumn = '0' -- 不显示左侧折叠列（嫌占地方）；想看改成 '1'/'auto'

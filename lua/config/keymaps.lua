@@ -18,10 +18,9 @@ map('v', 'K', ":m '<-2<CR>gv=gv", { desc = '上移选中' })
 map('x', '<leader>p', '"_dP', { desc = '粘贴不覆盖寄存器' })
 map({ 'n', 'v' }, '<leader>d', '"_d', { desc = '删除不入寄存器' })
 
--- 系统剪贴板复制（对齐 vimrc 里 \c/\a/\v 的习惯）
-map('v', '<leader>y', '"+y', { desc = '复制到系统剪贴板' })
+-- 系统剪贴板：options.lua 已设 clipboard=unnamedplus，默认 y/p 即直通系统剪贴板，
+-- 无需额外映射。（保留“复制全文”这个高频便捷键）
 map('n', '<leader>Y', 'gg"+yG', { desc = '复制全文到剪贴板' })
-map('n', '<leader>p', '"+p', { desc = '从剪贴板粘贴' })
 
 -- 缩进保持选区
 map('v', '<', '<gv')
