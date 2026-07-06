@@ -47,7 +47,9 @@ return {
             return
           end
           -- 仅在 treesitter 成功启动的缓冲上启用基于语法的折叠/缩进
-          vim.bo[args.buf].foldmethod = 'expr'
+          -- 注意：foldmethod / foldexpr 是 window-local，必须用 vim.wo；
+          --       indentexpr 是 buffer-local，用 vim.bo。
+          vim.wo[0].foldmethod = 'expr'
           vim.wo[0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
           vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
         end,
