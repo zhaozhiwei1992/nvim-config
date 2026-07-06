@@ -281,6 +281,26 @@ paru -S lazygit
 tmuxp load dev    # 启动三窗布局（需 ~/.config/tmuxp/dev.yaml）
 ```
 
+``` yaml
+session_name: dev
+start_directory: "#{pane_current_path}"
+shell_command_before:
+  - ''  # 占位，确保各 pane 独立命令
+windows:
+  - window_name: code
+    layout: main-vertical
+    options:
+      main-pane-width: 70%    # 左 nvim 占 55列 宽,可以通过stty size命令来看行列,可以直接设置百分比
+    panes:
+      - shell_command:
+          - nvim              # pane 0：左 nvim
+      - shell_command:
+          - nvm use system
+          - opencode            # pane 1：右上 opencode
+      - shell_command: []     # pane 2：右下 console(空 shell)
+
+```
+
 ## 维护命令
 
 | 操作               | 命令                                                |
