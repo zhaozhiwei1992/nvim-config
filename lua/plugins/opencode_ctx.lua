@@ -60,24 +60,26 @@ local function send_to_tmux(text)
 end
 
 --------------------------------------------------------------------------------
--- 公开接口（Public API，供键位调用）
+-- 公开接口（Public API，M 表 + 闭包引用，无需 _G 全局污染）
 --------------------------------------------------------------------------------
 
+local M = {}
+
 --- 发送当前文件路径 + 光标行号（如 /path/file.lua:42）
-function _G.opencode_send_location()
+function M.send_location()
   local filepath = vim.fn.expand('%:p')
   local linenr = vim.fn.line('.')
   send_to_tmux(string.format('%s:%d', filepath, linenr))
 end
 
 --- 发送当前文件的绝对路径（opencode 会读取该文件内容）
-function _G.opencode_send_file()
+function M.send_file()
   local filepath = vim.fn.expand('%:p')
   send_to_tmux('@' .. filepath)
 end
 
 --- 发送可视模式选中的文本（附带来源标签 @file:start-end）
-function _G.opencode_send_selection()
+function M.send_selection()
   local start_line = vim.fn.line('v')
   local end_line = vim.fn.line('.')
   if start_line > end_line then
@@ -105,11 +107,11 @@ return {
     -- 仅当 tmux 可用且当前处于 tmux 会话内才启用，否则键位不注册（干净降级）
     cond = vim.fn.executable('tmux') == 1 and os.getenv('TMUX') ~= nil,
 
-    -- 键位：<leader>o 前缀 = opencode
+    -- 键位：<leader>o 前缀 = opencode（闭包引用 M，不依赖 _G 全局）
     keys = {
-      { '<leader>ol', '<cmd>lua opencode_send_location()<CR>', desc = 'opencode: 发送当前行' },
-      { '<leader>of', '<cmd>lua opencode_send_file()<CR>', desc = 'opencode: 发送文件路径' },
-      { '<leader>os', '<cmd>lua opencode_send_selection()<CR>', mode = 'v', desc = 'opencode: 发送选区' },
+      { '<leader>ol', function() M.send_location() end, desc = 'opencode: 发送当前行' },
+      { '<leader>of', function() M.send_file() end, desc = 'opencode: 发送文件路径' },
+      { '<leader>os', function() M.send_selection() end, mode = 'v', desc = 'opencode: 发送选区' },
     },
 
     config = function()
