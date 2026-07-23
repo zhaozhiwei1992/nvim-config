@@ -34,21 +34,20 @@ return {
       })
 
       -- 进 LSP 时绑一组通用键位
+      -- gd / gD / K / [d / ]d 用 nvim 0.11+ 内置默认，不再手写
       vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(args)
           local function map(mode, lhs, rhs, desc)
-            vim.keymap.set(mode, lhs, rhs, { buffer = args.buf, desc = 'LSP: ' .. desc })
+            vim.keymap.set(mode, lhs, rhs, { buffer = args.buf, desc = desc })
           end
-          map('n', 'gd', vim.lsp.buf.definition, '跳转定义')
+          -- g 前缀：跳转式（LazyVim 风格，覆盖官方 gr 前缀的单键版）
           map('n', 'gr', vim.lsp.buf.references, '引用')
-          map('n', 'gD', vim.lsp.buf.declaration, '声明')
-          map('n', 'gi', vim.lsp.buf.implementation, '实现')
-          map('n', 'K', vim.lsp.buf.hover, '悬停文档')
+          map('n', 'gI', vim.lsp.buf.implementation, '实现')
+          map('n', 'gy', vim.lsp.buf.type_definition, '类型定义')
+          -- <leader>c 前缀：命令式（与 g 跳转互补）
           map('n', '<leader>ca', vim.lsp.buf.code_action, '代码操作')
           map('n', '<leader>cr', vim.lsp.buf.rename, '重命名')
           map('n', '<leader>cd', vim.diagnostic.open_float, '行诊断')
-          map('n', '[d', vim.diagnostic.goto_prev, '上一条诊断')
-          map('n', ']d', vim.diagnostic.goto_next, '下一条诊断')
         end,
       })
 

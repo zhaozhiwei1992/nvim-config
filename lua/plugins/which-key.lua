@@ -1,32 +1,34 @@
 -- lua/plugins/which-key.lua
 return {
-  "folke/which-key.nvim",
-  event = "VeryLazy",
-  opts = {
-    -- 这里可以调整窗口样式，解决折叠问题
-    window = {
-      layout = {
-        width = { min = 20, max = 60 },
-        height = { min = 4, max = 25 }, -- 稍微调大一点高度
-        spacing = 3,
-      },
-    },
-  },
-  config = function(_, opts)
-    local wk = require("which-key")
-    wk.setup(opts)
+	"folke/which-key.nvim",
+	event = "VeryLazy",
+	opts = {
+		-- 关掉所有图标（nerd font / group 图标都不显示）
+		icons = {
+			enabled = false,
+		},
+		window = {
+			layout = {
+				width = { min = 20, max = 60 },
+				height = { min = 4, max = 25 },
+				spacing = 3,
+			},
+		},
+	},
+	config = function(_, opts)
+		local wk = require("which-key")
+		wk.setup(opts)
 
-    -- 关键在这里：手动注册分组
-    -- 这告诉 which-key：所有 <leader>f 开头的键都属于 "File" 组
-    wk.add({
-      { "<leader>b", group = "Buffer" },
-      { "<leader>c", group = "Code/LSP" },
-      { "<leader>f", group = "File" },   -- 对应你的 fzf-lua 和文件操作
-      { "<leader>g", group = "Git" },
-      { "<leader>q", group = "Quit" },
-      { "<leader>w", group = "Window" },
-      { "<leader>/", group = "Search" }, -- 把 / 也归入 Search
-      { "<leader><tab>", group = "Buffer" }, -- 归入 Buffer
-    })
-  end,
+		-- 只声明「分组前缀」，单键 action（<leader>/ 和 <leader><tab>）不在此声明
+		wk.add({
+			{ "<leader>b", group = "Buffer" },
+			{ "<leader>c", group = "Code" },
+			{ "<leader>d", group = "Debug" },
+			{ "<leader>f", group = "File/Find" },
+			{ "<leader>g", group = "Git" },
+			{ "<leader>j", group = "Jump" },
+			{ "<leader>o", group = "OpenCode" },
+			{ "<leader>q", group = "Quit/Session" },
+		})
+	end,
 }

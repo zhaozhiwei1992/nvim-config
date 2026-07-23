@@ -1,8 +1,5 @@
 -- editor.lua —— 编辑增强
 return {
-  -- which-key：键位提示弹窗，按 <leader> 后自动列出后续可选项
-  { 'folke/which-key.nvim', event = 'VeryLazy', opts = {} },
-
   -- 注释切换（gcc 当前行 / gc{motion}，替代 NERD_commenter）
   { 'numToStr/Comment.nvim', opts = {}, lazy = false },
 

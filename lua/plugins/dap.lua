@@ -17,27 +17,27 @@ local function set_dap_keys()
   local ui = require('dapui')
 
   -- 执行控制
-  map('n', '<leader>dc', dap.continue, { desc = 'DAP: 继续/启动' }) -- 有断点继续，无则启动
-  map('n', '<leader>dr', dap.run_last, { desc = 'DAP: 重跑上次' })
-  map('n', '<leader>ds', dap.terminate, { desc = 'DAP: 停止' })
+  map('n', '<leader>dc', dap.continue, { desc = '继续/启动' }) -- 有断点继续，无则启动
+  map('n', '<leader>dr', dap.run_last, { desc = '重跑上次' })
+  map('n', '<leader>ds', dap.terminate, { desc = '停止' })
 
   -- 单步
-  map('n', '<leader>di', dap.step_into, { desc = 'DAP: 步入' })
-  map('n', '<leader>do', dap.step_out, { desc = 'DAP: 步出' })
-  map('n', '<leader>dn', dap.step_over, { desc = 'DAP: 单步(步过)' })
-  map('n', '<leader>db', dap.toggle_breakpoint, { desc = 'DAP: 切断点' })
+  map('n', '<leader>di', dap.step_into, { desc = '步入' })
+  map('n', '<leader>do', dap.step_out, { desc = '步出' })
+  map('n', '<leader>dn', dap.step_over, { desc = '单步(步过)' })
+  map('n', '<leader>db', dap.toggle_breakpoint, { desc = '切断点' })
   map('n', '<leader>dB', function()
     dap.set_breakpoint(vim.fn.input('断点条件: '))
-  end, { desc = 'DAP: 条件断点' })
+  end, { desc = '条件断点' })
 
   -- UI
-  map('n', '<leader>du', ui.toggle, { desc = 'DAP: 开关界面' })
+  map('n', '<leader>du', ui.toggle, { desc = '开关界面' })
   map('n', '<leader>de', function()
     ui.eval(vim.fn.input('表达式: '))
-  end, { desc = 'DAP: 求值表达式' })
+  end, { desc = '求值表达式' })
   map({ 'n', 'v' }, '<leader>dh', function()
     require('dap.ui.widgets').hover()
-  end, { desc = 'DAP: 悬停变量' })
+  end, { desc = '悬停变量' })
 end
 
 ----------------------------------------------------------------------
