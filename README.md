@@ -40,25 +40,37 @@ lazy.nvim 按需加载，全套 34 个插件加身后启动仍 <60ms。
 │   ├── jdtls.lua
 │   ├── lua_ls.lua
 │   └── clangd.lua
-└── lua/
-    ├── config/                # 基础配置模块
-    │   ├── options.lua        #   选项（行号/缩进/搜索/折叠...）
-    │   ├── keymaps.lua        #   通用键位（插件无关）
-    │   ├── autocmds.lua       #   自动命令（yank 高亮/去尾空/bigfile 策略）
-    │   ├── lazy.lua           #   lazy.nvim 引导 + 插件 spec 汇总
-    │   └── lang.lua           #   各语言 LSP/格式化/DAP 清单
-    └── plugins/               # 每个插件一个 spec 文件
-        ├── editor.lua         #   which-key / Comment / surround / mini.align
-        ├── theme.lua          #   tokyonight + lualine + bufferline
-        ├── treesitter.lua     #   语法高亮/折叠/缩进
-        ├── lsp.lua            #   LSP 配置 + 诊断 + mason 自动安装
-        ├── cmp.lua            #   blink.cmp 补全
-        ├── fzf.lua            #   fzf-lua 模糊检索
-        ├── files.lua          #   neo-tree / oil / aerial
-        ├── git.lua            #   gitsigns / lazygit
-        ├── dap.lua            #   DAP 调试
-        ├── formatter.lua      #   conform.nvim 统一格式化
-        └── opencode_ctx.lua   #   opencode 上下文桥（本地插件）
+    └── lua/
+        ├── config/                # 基础配置模块
+        │   ├── options.lua        #   选项（行号/缩进/搜索/折叠...）
+        │   ├── keymaps.lua        #   通用键位（插件无关）
+        │   ├── autocmds.lua       #   自动命令（yank 高亮/去尾空/bigfile 策略）
+        │   ├── lazy.lua           #   lazy.nvim 引导 + 插件 spec 汇总
+        │   └── lang.lua           #   各语言 LSP/格式化/DAP 清单
+        ├── local/                 # 自研本地插件（标准结构，随时可抽出独立 repo）
+        │   ├── logjump/           #   日志堆栈跳转
+        │   │   ├── lua/logjump/
+        │   │   │   └── init.lua   #     模块逻辑
+        │   │   └── plugin/
+        │   │       └── init.lua   #     命令 + 键位注册
+        │   └── opencode-ctx/      #   opencode 上下文桥
+        │       ├── lua/opencode_ctx/
+        │       │   └── init.lua   #     模块逻辑
+        │       └── plugin/
+        │           └── init.lua   #     命令 + 键位注册
+        └── plugins/               # 每个插件一个 spec 文件（第三方 + 本地插件 spec）
+            ├── editor.lua         #   which-key / Comment / surround / mini.align
+            ├── theme.lua          #   tokyonight + lualine + bufferline
+            ├── treesitter.lua     #   语法高亮/折叠/缩进
+            ├── lsp.lua            #   LSP 配置 + 诊断 + mason 自动安装
+            ├── cmp.lua            #   blink.cmp 补全
+            ├── fzf.lua            #   fzf-lua 模糊检索
+            ├── files.lua          #   neo-tree / oil / aerial
+            ├── git.lua            #   gitsigns / lazygit
+            ├── dap.lua            #   DAP 调试
+            ├── formatter.lua      #   conform.nvim 统一格式化
+            ├── logjump.lua        #   logjump spec（dir → lua/local/logjump）
+            └── opencode_ctx.lua   #   opencode-ctx spec（dir → lua/local/opencode-ctx）
 ```
 
 ### 加载流程
@@ -383,6 +395,7 @@ nvim    # lazy 自动 bootstrap + 装插件 + mason 装 LSP + treesitter 装 par
 - **大文件策略**：`vim.b.bigfile` 在 >1MB 文件上自动禁用 syntax/treesitter/undo，纯文本浏览。
 - **blink.cmp 替代 nvim-cmp**：2026 年性能与零配置最优方案。
 - **fzf-lua 替代 Telescope**：本机 fzf/rg/fd 齐全，fzf-lua 是最快方案。
+- **自研插件用标准目录结构**：放在 `lua/local/<name>/` 下，lazy.nvim spec 中 `dir` 指向独立插件目录，而非整个 config。
 
 ## License
 

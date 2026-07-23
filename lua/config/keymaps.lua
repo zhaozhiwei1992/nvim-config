@@ -26,9 +26,13 @@ map('n', '<leader>Y', 'gg"+yG', { desc = '复制全文到剪贴板' })
 map('v', '<', '<gv')
 map('v', '>', '>gv')
 
--- 编辑 / 重载配置
-map('n', '<leader>ev', '<cmd>edit $MYVIMRC<CR>', { desc = '编辑 init.lua' })
-map('n', '<leader>sv', '<cmd>source $MYVIMRC<CR>', { desc = '重载配置' })
+-- 编辑 / 重载配置 跟spacemacs保持一致
+map('n', '<leader>fed', '<cmd>edit $MYVIMRC<CR>', { desc = '编辑 init.lua' })
+map('n', '<leader>fer', '<cmd>source $MYVIMRC<CR>', { desc = '重载配置' })
+
+-- 对齐 Spacemacs 的 SPC Tab
+map('n', '<leader><Tab>', '<C-^>', { desc = '切到上一个 buffer' })
+
 
 -- 退出
 map('n', '<leader>qq', '<cmd>qa<CR>', { desc = '全部退出' })
