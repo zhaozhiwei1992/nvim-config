@@ -19,7 +19,7 @@ map('x', '<leader>p', '"_dP', { desc = '粘贴不覆盖寄存器' })
 
 -- 系统剪贴板：options.lua 已设 clipboard=unnamedplus，默认 y/p 即直通系统剪贴板，
 -- 无需额外映射。（保留“复制全文”这个高频便捷键）
-map('n', '<leader>Y', 'gg"+yG', { desc = '复制全文到剪贴板' })
+map('n', '<leader>yY', 'gg"+yG', { desc = '复制全文到剪贴板' })
 
 -- 缩进保持选区
 map('v', '<', '<gv')
