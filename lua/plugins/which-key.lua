@@ -27,7 +27,6 @@ return {
 			{ "<leader>f", group = "File/Find" },
 			{ "<leader>g", group = "Git" },
 			{ "<leader>j", group = "Jump" },
-			{ "<leader>o", group = "OpenCode" },
 			{ "<leader>q", group = "Quit/Session" },
 			{ "<leader>y", group = "Copy" },
 		})

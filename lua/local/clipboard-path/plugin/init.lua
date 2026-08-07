@@ -26,3 +26,5 @@ map('n', '<leader>yr', function() M.copy(M.rel_path(),  '文件相对路径') en
 map('n', '<leader>yd', function() M.copy(M.dir(),       '所在目录')    end, { desc = '复制文件所在目录' })
 map('n', '<leader>yn', function() M.copy(M.filename(), '文件名')      end, { desc = '复制文件名' })
 map('n', '<leader>yl', function() M.copy(M.line_ref(), '文件:行号')    end, { desc = '复制 file:line' })
+-- 视觉模式：复制选中文本 + 来源标签 path:start-end（粘贴给 AI 提问时自带上下文来源）
+map('v', '<leader>y', function() M.copy_selection() end, { desc = '复制选区及来源' })
