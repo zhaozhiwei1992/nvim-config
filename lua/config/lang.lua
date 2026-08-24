@@ -10,7 +10,8 @@ M.servers = {
   'basedpyright',
   'ruff',
   'vtsls', -- TS/JS
-  'jdtls',
+  -- 'jdtls' 不在此列：Java 由 nvim-jdtls 插件 start_or_attach 接管（ftplugin/java.lua），
+  -- 若在这里 vim.lsp.enable('jdtls') 会与插件双 client（两个 JVM 进程）
   'lua_ls', -- nvim 配置自身
   'clangd', -- C/C++（可选）
 }
@@ -34,7 +35,7 @@ M.mason_tools = {
   'taplo',
   'lua-language-server', -- lua_ls（nvim 配置自身）
   'clangd', -- C/C++
-  -- 'jdtls', -- Java：eclipse 源国内拉取困难，单独处理（见文档「jdtls 特殊说明」）
+  'jdtls', -- Java：新版 mason 源不走 eclipse，2026-08-24 实测可装（见文档「jdtls 特殊说明」）
   -- 'codelldb', -- 已装
   -- 'rust-analyzer', -- 推荐用 rustup 组件：rustup component add rust-analyzer
 }

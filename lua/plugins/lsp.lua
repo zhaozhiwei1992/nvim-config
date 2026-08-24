@@ -52,6 +52,7 @@ return {
       })
 
       -- 用 0.12 原生 API 启用各语言服务器（配置见 lsp/<name>.lua）
+      -- Java 不在此列：由 nvim-jdtls 插件接管（见下面 spec + ftplugin/java.lua）
       for _, name in ipairs(lang.servers) do
         vim.lsp.enable(name)
       end
@@ -60,4 +61,8 @@ return {
 
   -- LSP 进度/UI 美化
   { 'j-hui/fidget.nvim', event = 'LspAttach', opts = {} },
+
+  -- Java：nvim-jdtls（官方推荐 start_or_attach 方案）；
+  -- 仅以 ft=java 懒加载，配置全在 ftplugin/java.lua；lang.lua 的 servers 里已移除 'jdtls' 避免双 client
+  { 'mfussenegger/nvim-jdtls', ft = 'java' },
 }
