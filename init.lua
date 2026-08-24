@@ -7,6 +7,10 @@ vim.g.maplocalleader = '\\'
 vim.g.data = vim.fn.stdpath('data') -- ~/.local/share/nvim
 vim.g.state = vim.fn.stdpath('state') -- ~/.local/state/nvim
 
+-- 把 mason 二进制目录注入 PATH：lsp/<name>.lua 的 cmd、conform 的 formatter 都靠它找可执行文件
+-- 必须放在插件加载前（LSP attach / formatter 解析时 PATH 已含 mason bin）
+vim.env.PATH = vim.fs.normalize(vim.g.data .. '/mason/bin') .. ':' .. vim.env.PATH
+
 -- 加载各模块（顺序敏感）
 require('config.options')
 require('config.keymaps')
