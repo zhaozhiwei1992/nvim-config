@@ -34,13 +34,14 @@ return {
       })
 
       -- 进 LSP 时绑一组通用键位
-      -- gd / gD / K / [d / ]d 用 nvim 0.11+ 内置默认，不再手写
+      -- gd 手写补绑：实测 nvim 0.12.3 内置默认只有 K/[d/]d/gO/tagfunc，gd/gD 不在其中（2026-08-26）
       vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(args)
           local function map(mode, lhs, rhs, desc)
             vim.keymap.set(mode, lhs, rhs, { buffer = args.buf, desc = desc })
           end
           -- g 前缀：跳转式（LazyVim 风格，覆盖官方 gr 前缀的单键版）
+          map('n', 'gd', vim.lsp.buf.definition, '跳转定义')
           map('n', 'gr', vim.lsp.buf.references, '引用')
           map('n', 'gI', vim.lsp.buf.implementation, '实现')
           map('n', 'gy', vim.lsp.buf.type_definition, '类型定义')

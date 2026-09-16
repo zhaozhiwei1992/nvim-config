@@ -32,6 +32,13 @@ map('n', '<leader>fer', '<cmd>source $MYVIMRC<CR>', { desc = '重载配置' })
 -- 对齐 Spacemacs 的 SPC Tab
 map('n', '<leader><Tab>', '<C-^>', { desc = '切到上一个 buffer' })
 
+-- 切换换行/非换行（对齐 Spacemacs 的 SPC t l → vim 的 set wrap）
+-- 用 vim.wo 窗口级切换：每个窗口各自记住状态，类似 Spacemacs 按 buffer 切换 visual-line-mode
+map('n', '<leader>tl', function()
+  vim.wo.wrap = not vim.wo.wrap
+  vim.notify(vim.wo.wrap and '换行开' or '换行关')
+end, { desc = '切换换行/不换行' })
+
 
 -- 退出
 map('n', '<leader>qq', '<cmd>qa<CR>', { desc = '全部退出' })
