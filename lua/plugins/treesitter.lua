@@ -1,15 +1,22 @@
--- treesitter.lua —— 基于语法的语法高亮/折叠/文本对象
+-- treesitter.lua —— 基于语法的语法高亮/折叠/文本对象（2026-09-21：Java / Go / Rust / Python / TS·JS / C·C++ / Lua）
 -- 注意：nvim-treesitter main 分支已废弃 nvim-treesitter.configs 模块与
 --       ensure_installed / highlight / indent 选项。新版用原生 vim.treesitter API：
 --   - 安装 parser:  require('nvim-treesitter').install{ 'lua', 'html', ... }
 --   - 高亮:         vim.treesitter.start(buf)（nvim 原生）
 --   - 折叠:         vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 --   - 缩进:         vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+-- parser 清单：java/go/rust 是代码语言；lua/vim/vimdoc/query 是 nvim 自身
+-- 配置与插件；markdown/json/yaml/toml 是笔记与配置文件。没装 parser 的语言只是
+-- 没有语法高亮/折叠，不影响打开文件；扩展语言在此列表加名字即可（启动时自动装）。
 local parsers = {
+  -- 代码语言语法高亮（核心）
+  'java', 'go', 'rust', 'python', 'c', 'cpp', 'typescript', 'javascript', 'tsx',
+  -- nvim 自身配置/插件
   'lua', 'vim', 'vimdoc', 'query',
-  'go', 'rust', 'python', 'typescript', 'tsx', 'javascript',
-  'java', 'html', 'css', 'json', 'yaml', 'toml',
+  -- 笔记
   'markdown', 'markdown_inline',
+  -- 配置文件与前端文件
+  'json', 'yaml', 'toml', 'html', 'css',
 }
 
 return {
