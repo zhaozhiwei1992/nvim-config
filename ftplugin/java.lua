@@ -17,6 +17,19 @@ local config = {
     java = {
       -- 按需：格式化风格 / 组织导入阈值等（eclipse.jdt.ls 同名 setting）
       -- organizeImports = { starThreshold = 99 },
+      -- 索引范围裁剪（2026-09 加，省内存/加快索引）：不索引构建产物与缓存
+      -- 显式列出（含 target/**），避免 jdtls 把生成字节码也建索引
+      import = {
+        exclusions = {
+          '**/node_modules/**',
+          '**/.metadata/**',
+          '**/archetype-resources/**',
+          '**/META-INF/maven/**',
+          '**/target/**',
+          '**/build/**',
+          '**/.gradle/**',
+        },
+      },
     },
   },
 }
@@ -25,6 +38,27 @@ local config = {
 local lombok = vim.fs.joinpath(vim.fn.stdpath('data'), 'mason/packages/jdtls/lombok.jar')
 if vim.fn.filereadable(lombok) == 1 then
   table.insert(config.cmd, '--jvm-arg=-javaagent:' .. lombok)
+end
+
+-- JVM 内存/GC 调优（2026-09 实测，详见 nvim实践.org「jdtls(Java)」节内存小节）
+-- 问题：jdtls.py 启动器硬编码 -Xms1G 且不设 -Xmx → JVM 默认堆上限=物理内存 1/4（本机 32G→8G），
+--       索引期 G1 数秒内 commit 3G+、之后一路涨，RSS 轻松超过 IDEA —— 这就是"比 IDEA 还吃内存"的原因。
+-- 实测（demo/springboot 同项目对比）：RSS@8s 默认 453MB → 调优 322MB；堆 commit 上限 8G → 1.5G。
+-- 参数来源：vscode-java PR#1262 / jdtls issue#1469、#2509 社区验证组合。
+-- 生效机制：--jvm-arg 追加在启动器自带 -Xms1G 之后，HotSpot 取最后一个 -Xms/-Xmx（已验证生效）。
+-- 若大单体/多模块项目 OOM，把 -Xmx1536m 调成 2048m 即可，其余参数不动。
+local jvm_args = {
+  '-Xms256m',                -- 覆盖启动器 -Xms1G：启动不预占 1G
+  '-Xmx1536m',               -- 堆上限 1.5G（日常单模块够用；Spring 大单体改 2G）
+  '-XX:+UseParallelGC',     -- 吞吐型 GC，索引/全量编译场景比 G1 省内存（vscode-java 官方建议组合）
+  '-XX:GCTimeRatio=4',      -- GC 时间预算放宽，自适应扩/缩堆更积极
+  '-XX:AdaptiveSizePolicyWeight=90',
+  '-XX:MinHeapFreeRatio=5', -- GC 后允许堆缩回（索引高峰过后归还内存）
+  '-XX:MaxHeapFreeRatio=10',
+  '-Dsun.zip.disableMemoryMapping=true', -- jar/zip 不 mmap，省原生内存与地址空间
+}
+for _, a in ipairs(jvm_args) do
+  table.insert(config.cmd, '--jvm-arg=' .. a)
 end
 
 -- 客户端能力：对 jdtls 全关 dynamicRegistration，强制静态上报全部 provider。
