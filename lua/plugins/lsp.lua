@@ -21,7 +21,9 @@ vim.diagnostic.config({
 })
 
 -- 进 LSP 时绑一组通用键位
--- gd 手写补绑：实测 nvim 0.12.3 内置默认只有 K/[d/]d/gO/tagfunc，gd/gD 不在其中（2026-08-26）
+-- g 前缀说明：nvim 0.12 内置 GLOBAL DEFAULTS 已有 gra/gri/grn/grr/grt/grx/gO（见 :h lsp-defaults），
+--   但 gd/gD 不在其中（0.12.3 实测）——这里手写补绑 LazyVim 风格单键版（gd/gr/gI/gy 覆盖官方 grx 等连键版）。
+--   只有 LSP attach 才绑这些键：Vue 之前跳不了定义 = 缺 client（已补 volar），不是键位问题。
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     local function map(mode, lhs, rhs, desc)

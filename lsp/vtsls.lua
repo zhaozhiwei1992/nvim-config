@@ -1,6 +1,8 @@
 -- vtsls —— TypeScript / JavaScript 的 LSP（typescript-language-server 的社区维护分支，
 --   对新 TS 版本跟进更快；vue-demo 等前端项目开箱即用）
 -- 负责：补全 / 跳转 / 诊断 / 重命名 / 组织 import
+-- ⚠️ 只服务 .ts/.js：.vue 是 SFC，由 volar（lsp/volar.lua 的 vue-language-server）独立 attach，
+--    不要在这里给 filetypes 加 'vue'（vtsls 解析不了 SFC 模板段）。
 return {
   cmd = { 'vtsls', '--stdio' }, -- mason 装的可执行文件（mason bin 自动注入 PATH）
   filetypes = {                -- 触发本 server 的文件类型（懒启动）
