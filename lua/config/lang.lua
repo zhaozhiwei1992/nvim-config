@@ -6,8 +6,9 @@ local M = {}
 
 -- 启用的 LSP 服务器清单（lsp.lua 里 vim.lsp.enable 按名加载 lsp/<name>.lua 作配置；
 -- 打开对应文件类型才启动 client，不碰不改的语言零开销）
--- ⚠️ Java 不走这里：由 nvim-jdtls 插件 start_or_attach 接管（配置全在 ftplugin/java.lua）。
---    若把 'jdtls' 加进来会与插件双 client（两个 JVM 进程），禁止。
+-- ⚠️ Java 不走 LSP（2026-11-06 起）：改用 lua/local/java-search 搜索方案（rg 索引 + treesitter），
+--    原 nvim-jdtls + ftplugin/java.lua 已停用（配置保留在 ftplugin/java.lua.bak，回滚见 lsp.lua 注释）。
+--    若回滚 jdtls：把 'jdtls' 放回本清单会与插件 start_or_attach 双 client（两个 JVM），禁止。
 -- ⚠️ vue 不走 vtsls：.vue 是 SFC（template+script+style 三段），vtsls 解析不了，
 --    必须用独立 client 'vue-language-server'（volar 2.x），见 lsp/vue-language-server.lua。
 -- ✍️ 扩展新语言 = 5 步（nvim 原生不带任何 LSP，补全/跳转全靠服务器进程）：
@@ -29,7 +30,9 @@ M.servers = {
 -- mason 自动安装的工具（LSP + 格式化二进制；rust-analyzer/rustfmt 走 rustup 自带，不列）
 M.mason_tools = {
   -- Java
-  'jdtls',              -- Java LSP 引擎（eclipse.jdt.ls，mason 包自带 lombok.jar）
+  -- 2026-11-06 停用 jdtls（改用搜索方案，见 lua/local/java-search）：注释掉防止 mason 自动更新装回
+  -- 回滚时取消注释即可（mason 不会卸载已装的 jdtls，二进制仍在 ~/.local/share/nvim/mason/bin）
+  -- 'jdtls',          -- Java LSP 引擎（eclipse.jdt.ls，mason 包自带 lombok.jar）
   'google-java-format', -- Java 格式化（conform 的 formatters_by_ft.java 用）
   -- Go
   'gopls',     -- Go LSP

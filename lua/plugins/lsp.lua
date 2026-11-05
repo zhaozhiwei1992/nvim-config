@@ -1,11 +1,13 @@
--- lsp.lua —— LSP 配置（Java 编辑器版，2026-09-21）
--- 链：mason 装 jdtls/google-java-format（清单见 config/lang.lua）
---   → nvim-jdtls 在 ft=java 时启动（配置全在 ftplugin/java.lua，不经 vim.lsp.enable）
+-- lsp.lua —— LSP 配置（2026-11-06：Java 已切搜索方案，其余语言照旧）
+-- 链：mason 装各语言 LSP/格式化二进制（清单见 config/lang.lua）
+--   → vim.lsp.enable 按 filetype 懒启动；Java 例外：2026-11-06 起不走 LSP，
+--     改用 lua/local/java-search（rg 符号索引 + treesitter），原因与设计见
+--     project-management/开发文档/插件开发/nvim/003_基于搜索的java编辑插件开发设计.org
 -- 诊断显示与 LspAttach 键位用 nvim 0.12 原生 API，不依赖任何 LSP 插件包。
 local lang = require('config.lang')
 
 -- 启用 lang.lua 清单里的语言服务器（0.12 原生：lsp/<name>.lua 只是注册 config，
--- 必须 vim.lsp.enable 才按 filetypes 懒启动；Java 由 nvim-jdtls 接管，不在清单）
+-- 必须 vim.lsp.enable 才按 filetypes 懒启动；Java 已改搜索方案，不在清单）
 for _, name in ipairs(lang.servers) do
   vim.lsp.enable(name)
 end
@@ -61,5 +63,7 @@ return {
 
   -- Java：nvim-jdtls（官方推荐的 Java LSP 前端，start_or_attach 方案）
   -- 仅以 ft=java 懒加载，全部配置在 ftplugin/java.lua
-  { 'mfussenegger/nvim-jdtls', ft = 'java' },
+  -- 2026-11-06 停用：改用搜索方案（lua/local/java-search），配置代码保留用于回滚
+  -- 回滚：取消下一行注释 + mv ftplugin/java.lua.bak ftplugin/java.lua + lang.lua 恢复 'jdtls'
+  -- { 'mfussenegger/nvim-jdtls', ft = 'java' },
 }
